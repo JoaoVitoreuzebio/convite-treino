@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treino com o Mozão</title>
+    <style>
+        /* --- Reset e Base --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #121212; /* Fundo Padrão (Dark Gym) */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: background 1s ease;
+            overflow-x: hidden; /* Evita barra de rolagem horizontal por causa da chuva */
+        }
+
+        /* --- Cartão Principal --- */
+        .card {
+            background: #1e1e1e;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden; /* Para a imagem respeitar a borda arredondada */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            transition: all 0.5s ease;
+        }
+
+        /* --- Imagem do Topo (CORRIGIDO) --- */
+        .hero-img {
+            width: 100%;
+            height: auto; /* Permite que a imagem defina sua própria altura */
+            display: block; /* Remove espaços extras abaixo da imagem */
+            border-bottom: 4px solid #00e676; /* Linha verde neon padrão */
+            transition: border-color 0.5s ease;
+        }
+
+        /* --- Conteúdo --- */
+        .content { padding: 20px; }
+
+        h1 { color: #fff; font-size: 1.8rem; margin-bottom: 5px; }
+        p { color: #aaa; margin-bottom: 20px; font-size: 0.95rem; }
+
+        /* --- Seções de Escolha --- */
+        .section-title {
+            text-align: left;
+            color: #00e676;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            transition: color 0.5s ease;
+        }
+
+        /* --- Radio Buttons --- */
+        input[type="radio"] { display: none; }
+
+        .option-label {
+            display: block;
+            background: #2c2c2c;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .option-label:hover { background: #383838; }
+
+        /* Selecionado - Padrão */
+        input[type="radio"]:checked + .option-label {
+            border-color: #00e676;
+            background: rgba(0, 230, 118, 0.1);
+            color: #fff;
+        }
+
+        .option-title { font-weight: bold; display: block; }
+        .option-desc { font-size: 0.8rem; color: #888; display: block; margin-top: 3px; }
+
+        /* --- Botão Final --- */
+        .btn-confirm {
+            background-color: #00e676;
+            color: #000;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            margin-top: 25px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: transform 0.2s, background-color 0.5s, box-shadow 0.5s;
+        }
+        .btn-confirm:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(0, 230, 118, 0.4); }
+
+        /* =========================================
+           MODO STEFANI (CSS ESPECIAL)
+           ========================================= */
+        body.love-mode {
+            background: linear-gradient(135deg, #200122, #6f0000); /* Roxo e Vermelho */
+        }
+
+        .love-mode .card {
+            border-color: #ff4081;
+            box-shadow: 0 0 30px rgba(255, 64, 129, 0.3);
+        }
+
+        .love-mode .hero-img {
+            border-bottom-color: #ff4081; /* Linha rosa */
+        }
+
+        .love-mode .section-title {
+            color: #ff4081;
+        }
+
+        /* Selecionado - Modo Love */
+        .love-mode input[type="radio"]:checked + .option-label {
+            border-color: #ff4081;
+            background: rgba(255, 64, 129, 0.15);
+        }
+
+        .love-mode .btn-confirm {
+            background-color: #ff4081;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.4);
+        }
+        .love-mode .btn-confirm:hover {
+            box-shadow: 0 0 25px rgba(255, 64, 129, 0.6);
+        }
+
+        /* Chuva de Emojis */
+        .floating-emoji {
+            position: absolute;
+            bottom: -50px;
+            font-size: 1.5rem;
+            animation: floatUp 6s infinite linear;
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none; /* Não atrapalha o clique */
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="emoji-container"></div>
+
+    <div class="card">
+        <img src="casal.jpg" alt="Casal Anime Gym" class="hero-img">
+
+        <div class="content">
+            <h1 id="titulo-principal">Bora Treinar? 🏋️‍♀️</h1>
+            <p id="subtitulo-principal">Escolha o local e horário:</p>
+
+            <div class="section-title">📍 Onde vamos treinar?</div>
+
+            <form id="treinoForm">
+                
+                <input type="radio" name="local" id="loc1" value="Carrefour Fundação">
+                <label for="loc1" class="option-label">
+                    <span class="option-title">Carrefour Fundação</span>
+                    <span class="option-desc">Rua Aquiban - Fundação</span>
+                </label>
+
+                <input type="radio" name="local" id="loc2" value="Assaí SCS (Av. Goiás)">
+                <label for="loc2" class="option-label">
+                    <span class="option-title">Assaí SCS - Av. Goiás</span>
+                    <span class="option-desc">Rua Senador Vergueiro, 428</span>
+                </label>
+
+                <input type="radio" name="local" id="loc3" value="Santa Paula">
+                <label for="loc3" class="option-label">
+                    <span class="option-title">Santa Paula</span>
+                    <span class="option-desc">Av. Vital Brasil Filho, 200</span>
+                </label>
+
+                <input type="radio" name="local" id="loc4" value="Central Plaza">
+                <label for="loc4" class="option-label">
+                    <span class="option-title">Central Plaza</span>
+                    <span class="option-desc">Av. Dr. Francisco Mesquita, 1000</span>
+                </label>
+
+                <div class="section-title">⏰ Que horas?</div>
+
+                <input type="radio" name="hora" id="h1" value="08:00 (Estação SCS)">
+                <label for="h1" class="option-label">
+                    <span class="option-title">08:00 - Estação SCS</span>
+                    <span class="option-desc">Aproveitar o dia ☀️</span>
+                </label>
+
+                <input type="radio" name="hora" id="h2" value="09:00 (Padrão)">
+                <label for="h2" class="option-label">
+                    <span class="option-title">09:00 - Horário Padrão</span>
+                    <span class="option-desc">Encontro de sempre 😉</span>
+                </label>
+
+            </form>
+
+            <button class="btn-confirm" id="btn-submit" onclick="enviarEscolha()">Confirmar Treino</button>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURAÇÕES GERAIS ---
+        // COLOQUE SEU NÚMERO AQUI (Mantenha o 55 e DDD)
+        const SEU_NUMERO = "5511999999999"; 
+
+        // 1. Detectar se é a Stefani
+        const params = new URLSearchParams(window.location.search);
+        let nomeURL = params.get('nome') || "";
+        const nomeFormatado = nomeURL.trim().toLowerCase();
+        
+        // Flag para saber se o modo amor está ativo
+        let isLoveMode = false;
+
+        if (nomeFormatado === 'stefani' || nomeFormatado === 'ste' || nomeFormatado === 'amor') {
+            isLoveMode = true;
+            ativarModoStefani();
+        }
+
+        function ativarModoStefani() {
+            // Ativa CSS
+            document.body.classList.add('love-mode');
+            
+            // Muda Textos
+            document.getElementById('titulo-principal').innerText = "Oi Amor! 💪❤️";
+            document.getElementById('subtitulo-principal').innerText = "Escolhe onde vamos ficar monstros hoje:";
+            document.getElementById('btn-submit').innerText = "Combinado, Amor! 😍";
+
+            // Chuva de Emojis
+            criarChuva();
+        }
+
+        function enviarEscolha() {
+            // Pega os inputs marcados
+            const localSelecionado = document.querySelector('input[name="local"]:checked');
+            const horaSelecionada = document.querySelector('input[name="hora"]:checked');
+
+            // Validação
+            if (!localSelecionado || !horaSelecionada) {
+                if(isLoveMode) {
+                    alert("Amor, escolhe as duas opções pra gente ir! ❤️");
+                } else {
+                    alert("Por favor, selecione o local e o horário.");
+                }
+                return;
+            }
+
+            const local = localSelecionado.value;
+            const hora = horaSelecionada.value;
+            
+            let mensagem = "";
+
+            // Mensagem diferente dependendo de quem acessa
+            if (isLoveMode) {
+                mensagem = `Oi vida! 💪❤️\n\nEu escolhi:\n📍 *Local:* ${local}\n⏰ *Horário:* ${hora}\n\nTe espero lá! 😘`;
+            } else {
+                mensagem = `Fala João! 👊\n\nConfirmo o treino:\n📍 Local: ${local}\n⏰ Hora: ${hora}`;
+            }
+
+            // Abre WhatsApp
+            const linkZap = `https://wa.me/${SEU_NUMERO}?text=${encodeURIComponent(mensagem)}`;
+            window.open(linkZap, '_blank');
+        }
+
+        function criarChuva() {
+            const container = document.getElementById('emoji-container');
+            const emojis = ['❤️', '💪', '🏋️‍♀️', '🔥', '💋'];
+            
+            for (let i = 0; i < 25; i++) {
+                const el = document.createElement('div');
+                el.classList.add('floating-emoji');
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.style.left = Math.random() * 100 + "vw";
+                el.style.animationDuration = (Math.random() * 3 + 4) + "s"; // entre 4 e 7s
+                el.style.animationDelay = Math.random() * 5 + "s";
+                container.appendChild(el);
+            }
+        }
+    </script>
+
+</body>
+</html>
