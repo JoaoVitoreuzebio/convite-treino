@@ -5,141 +5,145 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Treino com o Mozão</title>
     <style>
+        /* --- Variáveis de Tema (Cores Dinâmicas) --- */
+        :root {
+            --cor-primaria: #00e676; 
+            --cor-secundaria: #1e1e1e;
+            --cor-texto-btn: #000;
+            --sombra-cor: rgba(0, 230, 118, 0.4);
+        }
+
+        /* Tema: Praia (Passo 2) */
+        body.tema-praia {
+            --cor-primaria: #00b4d8; 
+            --sombra-cor: rgba(0, 180, 216, 0.4);
+            background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('download-_1_.png');
+        }
+
+        /* Tema: Amanhecer (Passo 3) */
+        body.tema-amanhecer {
+            --cor-primaria: #ffb703; 
+            --sombra-cor: rgba(255, 183, 3, 0.4);
+            background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.8)), url('amanhecer.png');
+        }
+
         /* --- Reset e Base --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #121212; /* Fundo Padrão (Dark Gym) */
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('casal.jpg') no-repeat center center fixed;
+            background-size: cover;
             color: white;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            transition: background 1s ease;
-            overflow-x: hidden; /* Evita barra de rolagem horizontal por causa da chuva */
+            transition: background-image 0.8s ease-in-out, background-color 0.8s ease;
+            overflow-x: hidden; 
         }
 
         /* --- Cartão Principal --- */
         .card {
-            background: #1e1e1e;
+            background: rgba(30, 30, 30, 0.95); 
+            backdrop-filter: blur(10px); 
             border-radius: 20px;
             width: 100%;
             max-width: 450px;
-            overflow: hidden; /* Para a imagem respeitar a borda arredondada */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid #333;
+            overflow: hidden; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
             text-align: center;
             position: relative;
             z-index: 10;
-            transition: all 0.5s ease;
         }
 
-        /* --- Imagem do Topo (CORRIGIDO) --- */
+        /* --- Imagem do Topo do Cartão --- */
         .hero-img {
             width: 100%;
-            height: auto; /* Permite que a imagem defina sua própria altura */
-            display: block; /* Remove espaços extras abaixo da imagem */
-            border-bottom: 4px solid #00e676; /* Linha verde neon padrão */
-            transition: border-color 0.5s ease;
+            height: auto; 
+            max-height: 450px;
+            object-fit: cover; 
+            object-position: top center; 
+            display: block; 
+            border-bottom: 4px solid var(--cor-primaria); 
+            transition: border-color 0.8s ease, opacity 0.4s ease;
+            opacity: 1;
+        }
+        .hero-img.fading { opacity: 0; }
+
+        /* --- Conteúdo e Steps --- */
+        .content { padding: 30px 25px; }
+        .step { display: none; animation: fadeInRight 0.5s ease forwards; }
+        .step.active { display: block; }
+
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        /* --- Conteúdo --- */
-        .content { padding: 20px; }
+        h1 { color: #fff; font-size: 1.8rem; margin-bottom: 12px; }
+        p { color: #ccc; margin-bottom: 25px; font-size: 1rem; line-height: 1.6; }
 
-        h1 { color: #fff; font-size: 1.8rem; margin-bottom: 5px; }
-        p { color: #aaa; margin-bottom: 20px; font-size: 0.95rem; }
-
-        /* --- Seções de Escolha --- */
-        .section-title {
+        /* --- Área de Texto Rolável --- */
+        .scrollable-text {
+            max-height: 35vh; 
+            overflow-y: auto; 
+            padding-right: 10px;
             text-align: left;
-            color: #00e676;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 15px;
-            margin-bottom: 10px;
-            font-weight: bold;
-            transition: color 0.5s ease;
+            margin-bottom: 20px;
+            color: #ddd;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
+        .scrollable-text p { margin-bottom: 15px; color: #ddd; }
+        .scrollable-text ul { margin-bottom: 15px; padding-left: 20px; }
+        .scrollable-text li { margin-bottom: 5px; }
+        
+        .scrollable-text::-webkit-scrollbar { width: 6px; }
+        .scrollable-text::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+        .scrollable-text::-webkit-scrollbar-thumb { background: var(--cor-primaria); border-radius: 10px; }
 
-        /* --- Radio Buttons --- */
-        input[type="radio"] { display: none; }
-
-        .option-label {
-            display: block;
-            background: #2c2c2c;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: left;
-            border: 2px solid transparent;
-            transition: all 0.2s;
-        }
-
-        .option-label:hover { background: #383838; }
-
-        /* Selecionado - Padrão */
-        input[type="radio"]:checked + .option-label {
-            border-color: #00e676;
-            background: rgba(0, 230, 118, 0.1);
-            color: #fff;
-        }
-
-        .option-title { font-weight: bold; display: block; }
-        .option-desc { font-size: 0.8rem; color: #888; display: block; margin-top: 3px; }
-
-        /* --- Botão Final --- */
+        /* --- Botões Dinâmicos --- */
         .btn-confirm {
-            background-color: #00e676;
-            color: #000;
+            background-color: var(--cor-primaria);
+            color: var(--cor-texto-btn);
             width: 100%;
             padding: 15px;
             border: none;
             border-radius: 50px;
             font-weight: 900;
             font-size: 1.1rem;
-            margin-top: 25px;
+            margin-top: 10px;
             cursor: pointer;
             text-transform: uppercase;
-            transition: transform 0.2s, background-color 0.5s, box-shadow 0.5s;
+            transition: transform 0.2s, background-color 0.8s ease, box-shadow 0.8s ease;
         }
-        .btn-confirm:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(0, 230, 118, 0.4); }
+        .btn-confirm:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--sombra-cor); }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #aaa;
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #555;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover { border-color: #ff5252; color: #ff5252; background: rgba(255,82,82, 0.1); }
 
         /* =========================================
            MODO STEFANI (CSS ESPECIAL)
            ========================================= */
         body.love-mode {
-            background: linear-gradient(135deg, #200122, #6f0000); /* Roxo e Vermelho */
-        }
-
-        .love-mode .card {
-            border-color: #ff4081;
-            box-shadow: 0 0 30px rgba(255, 64, 129, 0.3);
-        }
-
-        .love-mode .hero-img {
-            border-bottom-color: #ff4081; /* Linha rosa */
-        }
-
-        .love-mode .section-title {
-            color: #ff4081;
-        }
-
-        /* Selecionado - Modo Love */
-        .love-mode input[type="radio"]:checked + .option-label {
-            border-color: #ff4081;
-            background: rgba(255, 64, 129, 0.15);
-        }
-
-        .love-mode .btn-confirm {
-            background-color: #ff4081;
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.4);
-        }
-        .love-mode .btn-confirm:hover {
-            box-shadow: 0 0 25px rgba(255, 64, 129, 0.6);
+            --cor-primaria: #ff4081 !important;
+            --sombra-cor: rgba(255, 64, 129, 0.6) !important;
+            --cor-texto-btn: white !important;
         }
 
         /* Chuva de Emojis */
@@ -150,7 +154,7 @@
             animation: floatUp 6s infinite linear;
             opacity: 0;
             z-index: 1;
-            pointer-events: none; /* Não atrapalha o clique */
+            pointer-events: none; 
         }
 
         @keyframes floatUp {
@@ -158,6 +162,15 @@
             100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
         }
 
+        /* --- RESPONSIVIDADE --- */
+        @media (max-width: 480px) {
+            .card { border-radius: 15px; margin: 10px; }
+            .hero-img { max-height: 300px; } 
+            .content { padding: 20px 15px; }
+            h1 { font-size: 1.5rem; }
+            .scrollable-text { max-height: 40vh; font-size: 0.9rem; }
+            .btn-confirm { padding: 14px; font-size: 1rem; }
+        }
     </style>
 </head>
 <body>
@@ -165,139 +178,158 @@
     <div id="emoji-container"></div>
 
     <div class="card">
-        <img src="casal.jpg" alt="Casal Anime Gym" class="hero-img">
+        <img id="hero-image" src="casal.jpg" alt="Imagem Topo" class="hero-img">
 
         <div class="content">
-            <h1 id="titulo-principal">Bora Treinar? 🏋️‍♀️</h1>
-            <p id="subtitulo-principal">Escolha o local e horário:</p>
+            
+            <div id="step1" class="step active">
+                <h1 id="titulo-principal">Bora Treinar? 🏋️‍♀️</h1>
+                <p id="subtitulo-principal">E aí, você quer treinar comigo Amanhã?</p>
+                <button class="btn-confirm" onclick="mudarTela(2)">Sim, eu quero!</button>
+                <button class="btn-secondary" onclick="acaoNao()">Hoje não</button>
+            </div>
 
-            <div class="section-title">📍 Onde vamos treinar?</div>
-
-            <form id="treinoForm">
+            <div id="step2" class="step">
+                <h1>Convite Especial 🏖️</h1>
                 
-                <input type="radio" name="local" id="loc1" value="Carrefour Fundação">
-                <label for="loc1" class="option-label">
-                    <span class="option-title">Carrefour Fundação</span>
-                    <span class="option-desc">Rua Aquiban - Fundação</span>
-                </label>
+                <div class="scrollable-text">
+                    <p>Meu amor, é com muita alegria e um enorme carinho que venho te fazer um convite especial. Pensando no quanto você merece descansar, relaxar e também viver momentos leves e felizes, decidi planejar algo simples, mas cheio de significado pra nós dois.</p>
+                    <p>Como sei que no final do ano passado você não conseguiu aproveitar a praia... aquele solzinho, o mar, a sensação gostosa de paz que só a praia traz... pensei: por que não fazermos um bate-volta diferente? Um dia só nosso, sem correria, sem pressão, só para descansar e curtir juntos.</p>
+                    <p>Então aqui vai meu convite oficial: dia <strong>16/02</strong>, quero te levar comigo para <strong>Santos</strong>. É pertinho, a praia é deliciosa, e além do mar temos várias opções tranquilas: caminhar pela orla, tomar um sorvete, almoçar em algum lugar legal, passear pelo centro ou até entrar num shopping se quisermos variar. Mesmo que a gente não entre na água, só o clima da praia já renova a mente.</p>
+                    <p>A ideia é sairmos cedo — sim, eu sei que é feriado 😅 — mas prometo que é por um bom motivo: evitar muvuca, aproveitar melhor o dia e voltar com aquela sensação boa de descanso. Estou pensando em sairmos por volta das <strong>7h10 da rodoviária do Jabaquara</strong>, chegando lá por volta de <strong>8h / 8h30</strong>, e retornarmos no final da tarde, algo entre <strong>17h30 e 18h</strong>.</p>
+                    <p>Sobre o dia em si, pode ficar tranquila: a gente decide tudo juntos. Podemos levar um lanchinho, almoçar por lá, improvisar… o importante é estarmos bem e curtindo.</p>
+                    <p>Se puder, já vai separando:</p>
+                    <ul style="list-style-type: none; padding-left: 0;">
+                        <li>☀️ protetor solar</li>
+                        <li>👗 roupa confortável</li>
+                        <li>👙 algo leve pra praia</li>
+                    </ul>
+                    <p>Prepare-se para um dia em que quero cuidar de você, te ver relaxar, sorrir e simplesmente aproveitar. E confesso: viajar juntos, mesmo que rapidinho, vai ser mais uma experiência linda pra nossa história.</p>
+                    <p>Então, minha princesa… você aceita esse passeio comigo? Se sim, é só confirmar. Se tiver qualquer dúvida ou quiser ajustar algo, a gente conversa — o mais importante pra mim é passar esse tempo ao seu lado.</p>
+                    <p style="color: var(--cor-primaria); font-weight: bold; margin-top: 20px; text-align: center;">
+                        Com muito amor,<br>
+                        do seu Ti que te ama demais,<br>
+                        João ❤️
+                    </p>
+                </div>
 
-                <input type="radio" name="local" id="loc2" value="Assaí SCS (Av. Goiás)">
-                <label for="loc2" class="option-label">
-                    <span class="option-title">Assaí SCS - Av. Goiás</span>
-                    <span class="option-desc">Rua Senador Vergueiro, 428</span>
-                </label>
+                <button class="btn-confirm" onclick="mudarTela(3)">Aceito demais! ❤️</button>
+            </div>
 
-                <input type="radio" name="local" id="loc3" value="Santa Paula">
-                <label for="loc3" class="option-label">
-                    <span class="option-title">Santa Paula</span>
-                    <span class="option-desc">Av. Vital Brasil Filho, 200</span>
-                </label>
+            <div id="step3" class="step">
+                <h1>Bom dia, Minha Princesa! 🌅</h1>
+                
+                <div class="scrollable-text">
+                    <p>É com muito prazer.... e agora por outra plataforma também kkkkkk que eu venho te dar mais um:</p>
+                    <p><strong>Bom dia, minha princesa. Bom dia, meu amor, bom dia, minha linda.</strong></p>
+                    <p>Hoje, mais do que nunca, temos diante de nós um dia maravilhoso, um presente que Deus nos concedeu. Um dia iluminado por esse sol lindo (mesmo com esse calor danado kkk), mas amém… graças a Deus! O importante é que estamos bem, que temos vida, saúde e mais uma oportunidade de viver, aprender e compartilhar momentos juntos !!!!</p>
+                    <p>Fico muito feliz, amor, por tudo que vivemos essa manhã. Foi tão bom poder conversar, compartilhar histórias, abrir o coração um com o outro. E graças a Deus você conseguiu ir ao médico.... isso já traz um alívio e mostra que as coisas estão caminhando, passo a passo, do jeito que precisam caminhar.... (cuide-se mocinha, por favor !!!! )</p>
+                    <p>Encerramos mais uma semana.... Uma semana que teve seus desafios, seus dilemas, seus momentos de tensão… mas também uma semana em que seguimos firmes, cumprindo nossas responsabilidades, buscando fazer tudo da melhor forma possível. E nisso tudo, amor, dá pra ver claramente o trabalhar de Deus nas nossas vidas... nos pensamentos, nas decisões, nas atitudes. (Fora uma escapadinha ou outra para scs)</p>
+                    <p>Eu sei que nem todo dia é fácil... Tem dias em que a gente se sente meio perdido, sem saber exatamente o que fazer. Mas é nesses momentos que a oração, a Palavra e a certeza do cuidado de Deus nos sustentam. Temos um Pai que cuida, que entende nosso coração, que nos ama profundamente. E mesmo quando algumas situações parecem difíceis, elas sempre trazem aprendizado, direção e crescimento.</p>
+                    <p>Que a gente nunca perca esse coração humilde diante de Deus. Que a gente saiba reconhecer nossas falhas, baixar o ego quando necessário e lembrar sempre que, sem Ele, nada somos... mas com Ele, conseguimos seguir em frente com paz e propósito.</p>
+                    <p>Quero também te agradecer, amor. Eu amo receber seus devocionais, amo ler suas mensagens, amo a forma como você compartilha sua fé, sua sensibilidade e seu coração. É um privilégio enorme poder crescer espiritualmente ao seu lado. Você tem sido uma verdadeira bênção na minha vida.... nas palavras, nas atitudes, no jeito de ser.</p>
+                    <p>E eu sempre vou deixar claro o quanto eu te amo. Seja em mensagens, em pequenos gestos, em projetos, ideias ou até nesses “devaneios” que eu invento 😅. Tudo que faço é pensado com carinho, sem pressa, sem sobrecarregar, pra que venha leve e sincero...porque você merece isso, e muito mais.</p>
+                    <p>Você é uma mulher incrível, amor. Tem sido cuidado, apoio, alegria e bênção na minha vida. E nada mais justo do que eu buscar retribuir à altura, sempre dando o meu melhor... e o meu melhor sempre vai incluir te amar cada dia mais.</p>
+                    <p>Obrigado por essa semana. Obrigado por caminhar comigo. Obrigado por ser quem você é.</p>
+                    <p>Que tenhamos um final de semana e esse feriado abençoados, leves, guiados por Deus. E nunca esqueça: estou sempre a uma ligação de distância, sempre aqui pra você.</p>
+                    <p>Ah… e já vai se preparando, viu? Nosso treino vem aí 😄 estou ansioso pra te ver. Saudade já bateu.</p>
+                    <p>Eu te amo, meu amor. Muito, muito mesmo.<br>Do seu Ti, que te ama demais.<br>João ❤️</p>
+                    
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.2); margin: 25px 0;">
+                    
+                    <p><em>Meu amor… hoje o devocional foi baseado em 1 Pedro 4:16:</em></p>
+                    <p><em>“Mas, se sofrer como cristão, não se envergonhe disso; antes, glorifique a Deus com esse nome.”</em></p>
+                    <p>E sabe… a reflexão foi muito sobre resistência....até mesmo como topico do devocional, a palavra "resistencia" se fez presente... Às vezes a gente entra na caminhada com Cristo achando que os problemas vão simplesmente desaparecer, mas a verdade é que eles continuam existindo... a diferença é que agora a gente não passa por nada sozinho. Deus permanece conosco nos dias bons e, principalmente, nos dias difíceis.</p>
+                    <p>Algo que me marcou foi lembrar que o amor de Deus não muda conforme nossas circunstâncias. Ele entende a nossa dor porque Ele mesmo viveu o sofrimento quando veio. Isso me traz muito conforto, porque mostra que Ele não é distante da nossa realidade.</p>
+                    <p>Também falou muito sobre descanso (topico sensivel): quando entregamos nossos fardos a Deus, Ele alivia o peso do nosso coração. Nem sempre Ele tira a situação na hora, mas Ele fortalece a gente para atravessar tudo com coragem e fé. E isso já faz toda diferença.</p>
+                    <p>E eu confesso que, enquanto lia, pensei muito na gente… nos dias corridos, nas situações inesperadas, nas emoções que às vezes ficam à flor da pele. Deus continua cuidando, guiando e trabalhando mesmo quando não percebemos. Nossa história não termina nas dificuldades...Ele sempre está conduzindo.</p>
+                    <p>Minha oração hoje é que Deus conforte seu coração, te dê paz, força e descanso nele. E lembra: você nunca está sozinha, nem comigo e muito menos com Deus.</p>
+                    <p style="color: var(--cor-primaria); font-weight: bold; margin-top: 20px; text-align: center;">
+                        Te amo, meu amor 🤍<br>
+                        Do seu João.
+                    </p>
+                </div>
 
-                <input type="radio" name="local" id="loc4" value="Central Plaza">
-                <label for="loc4" class="option-label">
-                    <span class="option-title">Central Plaza</span>
-                    <span class="option-desc">Av. Dr. Francisco Mesquita, 1000</span>
-                </label>
+                <button class="btn-confirm" onclick="enviarZap()">Mandar Zap pro meu amor</button>
+            </div>
 
-                <div class="section-title">⏰ Que horas?</div>
-
-                <input type="radio" name="hora" id="h1" value="08:00 (Estação SCS)">
-                <label for="h1" class="option-label">
-                    <span class="option-title">08:00 - Estação SCS</span>
-                    <span class="option-desc">Aproveitar o dia ☀️</span>
-                </label>
-
-                <input type="radio" name="hora" id="h2" value="09:00 (Padrão)">
-                <label for="h2" class="option-label">
-                    <span class="option-title">09:00 - Horário Padrão</span>
-                    <span class="option-desc">Encontro de sempre 😉</span>
-                </label>
-
-            </form>
-
-            <button class="btn-confirm" id="btn-submit" onclick="enviarEscolha()">Confirmar Treino</button>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURAÇÕES GERAIS ---
-        // COLOQUE SEU NÚMERO AQUI (Mantenha o 55 e DDD)
         const SEU_NUMERO = "5511943837175"; 
 
-        // 1. Detectar se é a Stefani
+        const stepsConfig = {
+            1: { img: 'casal.jpg', themeClass: '' }, 
+            2: { img: 'download-_1_.png', themeClass: 'tema-praia' },
+            3: { img: 'amanhecer.png', themeClass: 'tema-amanhecer' }
+        };
+
         const params = new URLSearchParams(window.location.search);
-        let nomeURL = params.get('nome') || "";
-        const nomeFormatado = nomeURL.trim().toLowerCase();
-        
-        // Flag para saber se o modo amor está ativo
+        const nomeFormatado = (params.get('nome') || "").trim().toLowerCase();
         let isLoveMode = false;
 
-        if (nomeFormatado === 'stefani' || nomeFormatado === 'ste' || nomeFormatado === 'amor') {
+        if (['stefani', 'ste', 'amor'].includes(nomeFormatado)) {
             isLoveMode = true;
             ativarModoStefani();
         }
 
         function ativarModoStefani() {
-            // Ativa CSS
             document.body.classList.add('love-mode');
-            
-            // Muda Textos
             document.getElementById('titulo-principal').innerText = "Oi Amor! 💪❤️";
-            document.getElementById('subtitulo-principal').innerText = "Escolhe onde vamos ficar monstros hoje:";
-            document.getElementById('btn-submit').innerText = "Combinado, Amor! 😍";
-
-            // Chuva de Emojis
+            document.getElementById('subtitulo-principal').innerText = "Você quer treinar com o seu mozão hoje?";
             criarChuva();
         }
 
-        function enviarEscolha() {
-            // Pega os inputs marcados
-            const localSelecionado = document.querySelector('input[name="local"]:checked');
-            const horaSelecionada = document.querySelector('input[name="hora"]:checked');
-
-            // Validação
-            if (!localSelecionado || !horaSelecionada) {
-                if(isLoveMode) {
-                    alert("Amor, escolhe as duas opções pra gente ir! ❤️");
-                } else {
-                    alert("Por favor, selecione o local e o horário.");
-                }
-                return;
-            }
-
-            const local = localSelecionado.value;
-            const hora = horaSelecionada.value;
+        function mudarTela(numeroTela) {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
             
-            let mensagem = "";
+            const heroImgEl = document.getElementById('hero-image');
+            heroImgEl.classList.add('fading'); 
+            
+            setTimeout(() => {
+                heroImgEl.src = stepsConfig[numeroTela].img;
+                
+                document.body.classList.remove('tema-praia', 'tema-amanhecer');
+                if (stepsConfig[numeroTela].themeClass) {
+                    document.body.classList.add(stepsConfig[numeroTela].themeClass);
+                }
 
-            // Mensagem diferente dependendo de quem acessa
+                heroImgEl.classList.remove('fading');
+                document.getElementById('step' + numeroTela).classList.add('active');
+            }, 400); 
+        }
+
+        function acaoNao() {
             if (isLoveMode) {
-                mensagem = `Oi vida! 💪❤️\n\nEu escolhi:\n📍 *Local:* ${local}\n⏰ *Horário:* ${hora}\n\nTe espero lá! 😘`;
+                alert("Ah, poxa vida! 🥺 Mas eu te amo mesmo assim! (Clica no sim, vai...)");
             } else {
-                mensagem = `Fala João! 👊\n\nConfirmo o treino:\n📍 Local: ${local}\n⏰ Hora: ${hora}`;
+                alert("Sem problemas, fica pra próxima! 👊");
             }
+        }
 
-            // Abre WhatsApp
-            const linkZap = `https://wa.me/${SEU_NUMERO}?text=${encodeURIComponent(mensagem)}`;
-            window.open(linkZap, '_blank');
+        function enviarZap() {
+            let mensagem = isLoveMode 
+                ? `Oi vida! ❤️\n\nAcabei de ler tudo... o convite pra Santos, o devocional, a mensagem... Tô sem palavras, eu aceito tudo com você! Te amo demais! 😘`
+                : `Fala João! 👊\n\nLi os avisos e confirmo tudo!`;
+            
+            window.open(`https://wa.me/${SEU_NUMERO}?text=${encodeURIComponent(mensagem)}`, '_blank');
         }
 
         function criarChuva() {
             const container = document.getElementById('emoji-container');
-            const emojis = ['❤️', '💪', '🏋️‍♀️', '🔥', '💋'];
+            const emojis = ['❤️', '🌅', '☀️', '✨', '🤍'];
             
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < 20; i++) {
                 const el = document.createElement('div');
                 el.classList.add('floating-emoji');
                 el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
                 el.style.left = Math.random() * 100 + "vw";
-                el.style.animationDuration = (Math.random() * 3 + 4) + "s"; // entre 4 e 7s
+                el.style.animationDuration = (Math.random() * 3 + 5) + "s"; 
                 el.style.animationDelay = Math.random() * 5 + "s";
                 container.appendChild(el);
             }
         }
     </script>
-
 </body>
-
 </html>
